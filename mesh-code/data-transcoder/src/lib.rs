@@ -26,7 +26,7 @@ pub fn encode_discrete(mut discrete: i32) -> [u8; 8] {
     enc
 }
 
-pub fn decode_discrete(enc: [u8; 8]) -> i32 {
+pub fn decode_discrete(enc: &[u8; 8]) -> i32 {
     // Converts a set of `8` ASCII bytes that represent hexadecimal into a two's-complement `i32`.
     // These bytes must be valid hexadecimal and therefore can only have ASCII values 0-9 and A-F.
 
@@ -93,14 +93,14 @@ mod tests {
     #[test]
     fn transcode_float_test() {
         let val = (0.0 / 0.00001) as i32;
-        assert_eq!(val, decode_discrete(encode_discrete(val)));
+        assert_eq!(val, decode_discrete(&encode_discrete(val)));
         let val = (-180.0233 / 0.00001) as i32;
-        assert_eq!(val, decode_discrete(encode_discrete(val)));
+        assert_eq!(val, decode_discrete(&encode_discrete(val)));
         let val = (180.2323 / 0.00001) as i32;
-        assert_eq!(val, decode_discrete(encode_discrete(val)));
+        assert_eq!(val, decode_discrete(&encode_discrete(val)));
         let val = (-0.2343 / 0.00001) as i32;
-        assert_eq!(val, decode_discrete(encode_discrete(val)));
+        assert_eq!(val, decode_discrete(&encode_discrete(val)));
         let val = (0.2355 / 0.00001) as i32;
-        assert_eq!(val, decode_discrete(encode_discrete(val)));
+        assert_eq!(val, decode_discrete(&encode_discrete(val)));
     }
 }
