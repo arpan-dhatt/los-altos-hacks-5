@@ -25,7 +25,7 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.savedEmergencies, id: \.id){ emergency in
-                                Text(emergency.name).padding()
+                                emergencyCardView(emergency: emergency)
                             }
 
                         }.padding(.top)
@@ -36,7 +36,7 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
-                                Text(emergency.name).padding()
+                                emergencyCardView(emergency: emergency)
                             }
                             
                         }.padding(.top)
@@ -44,6 +44,27 @@ struct ResponderView: View {
                 }.navigationTitle("Current Emergencies")
             }
         }
+    }
+}
+
+struct emergencyCardView: View {
+    var emergency: emergency
+    var latitude = String(format: "%.2f", emergency.latitude)
+    var body: some View {
+        HStack{
+            VStack(alignment: .leading){
+                Text(emergency.name)
+                Text("Location: [ \(format: "%.2f", emergency.latitude), \(emergency.longitude) ]" )
+            }.padding()
+            VStack(alignment: .leading){
+                if emergency.activated{
+                    Text("Active")
+                }
+                else{
+                    Text("Not Active")
+                }
+            }.padding()
+        }.background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding()
     }
 }
 
