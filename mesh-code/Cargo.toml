@@ -2,5 +2,6 @@
 
 members = [
 	"data-transcoder",
-	"hci"
+	"hci",
+	"mesh-node"
 ]
