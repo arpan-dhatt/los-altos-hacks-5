@@ -110,4 +110,9 @@ mod tests {
             get_raw_advertising_data(&[b'1'; 40])
         );
     }
+
+    #[test]
+    fn run_hci_commands() {
+
+    }
 }
