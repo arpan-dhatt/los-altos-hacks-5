@@ -25,7 +25,7 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.savedEmergencies, id: \.id){ emergency in
-                                emergencyCardView(emergency: emergency)
+                                emergencySavedCardView(emergency: emergency)
                             }
 
                         }.padding(.top)
@@ -48,23 +48,70 @@ struct ResponderView: View {
 }
 
 struct emergencyCardView: View {
+    @EnvironmentObject var viewModel: ViewModel
     var emergency: emergency
-    var latitude = String(format: "%.2f", emergency.latitude)
     var body: some View {
-        HStack{
+        VStack{
+            HStack{
+                Image(systemName: "flame.fill").font(.title)
+                Spacer()
+                Image(systemName: "plus.square.fill.on.square.fill").font(.title).onTapGesture {
+                    withAnimation{
+                        viewModel.addSaved(e: emergency)
+                    }
+                }
+            }
+            HStack(alignment: .top){
             VStack(alignment: .leading){
-                Text(emergency.name)
-                Text("Location: [ \(format: "%.2f", emergency.latitude), \(emergency.longitude) ]" )
-            }.padding()
+                Text(emergency.name).font(.title2).fontWeight(.bold).padding(.bottom)
+                Text(String(format: "Location: [ %.2f , \(emergency.longitude) ]", emergency.latitude)).font(.headline).fontWeight(.light)
+            }.padding(.top)
+            Spacer()
             VStack(alignment: .leading){
                 if emergency.activated{
-                    Text("Active")
+                    Text("Active").font(.title2).fontWeight(.light)
                 }
                 else{
-                    Text("Not Active")
+                    Text("Not Active").font(.title2).fontWeight(.light)
                 }
-            }.padding()
-        }.background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding()
+                
+            }.padding(.top)
+        }
+        }.padding().background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding(.vertical).padding(.horizontal, 5)
+    }
+}
+
+struct emergencySavedCardView: View {
+    @EnvironmentObject var viewModel: ViewModel
+    var emergency: emergency
+    var body: some View {
+        VStack{
+            HStack{
+                Image(systemName: "flame.fill").font(.title)
+                Spacer()
+                Image(systemName: "x.circle.fill").font(.title).onTapGesture {
+                    withAnimation{
+                        viewModel.removeSaved(e: emergency)
+                    }
+                }
+            }
+            HStack(alignment: .top){
+            VStack(alignment: .leading){
+                Text(emergency.name).font(.title2).fontWeight(.bold).padding(.bottom)
+                Text(String(format: "Location: [ %.2f , \(emergency.longitude) ]", emergency.latitude)).font(.headline).fontWeight(.light)
+            }.padding(.top)
+            Spacer()
+            VStack(alignment: .leading){
+                if emergency.activated{
+                    Text("Active").font(.title2).fontWeight(.light)
+                }
+                else{
+                    Text("Not Active").font(.title2).fontWeight(.light)
+                }
+                
+            }.padding(.top)
+        }
+        }.padding().background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding(.vertical).padding(.horizontal, 5)
     }
 }
 
