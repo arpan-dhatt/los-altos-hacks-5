@@ -5,10 +5,10 @@ fn get_raw_advertising_data(bytes: &[u8; 40]) -> String {
     // This data header is used to define this packet as an Eddystone advertisement. There are
     // still `20` bytes remaining that can be used.
 
-    let mut data = "0x08 0x0008 1f 02 01 06 03 03 aa fe 14 16 aa fe ".to_string();
+    let mut data = "0x08 0x0008 1F 02 01 06 03 03 AA FE 14 16 AA FE ".to_string();
     // Loops over the 20 available bytes
     for i in 0..20 {
-        let byte_str = String::from_utf8_lossy(&bytes[i..i + 2]);
+        let byte_str = String::from_utf8_lossy(&bytes[i * 2..(i + 1) * 2]);
         data += &byte_str;
         data.push(' ');
     }
@@ -102,17 +102,44 @@ mod tests {
     #[test]
     fn get_raw_advertising_data_test() {
         assert_eq!(
-            "0x08 0x0008 1f 02 01 06 03 03 aa fe 14 16 aa fe 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+            "0x08 0x0008 1F 02 01 06 03 03 AA FE 14 16 AA FE 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
             get_raw_advertising_data(&[b'0'; 40])
         );
         assert_eq!(
-            "0x08 0x0008 1f 02 01 06 03 03 aa fe 14 16 aa fe 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11",
+            "0x08 0x0008 1F 02 01 06 03 03 AA FE 14 16 AA FE 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11",
             get_raw_advertising_data(&[b'1'; 40])
         );
     }
 
     #[test]
-    fn run_hci_commands() {
+    fn set_advertising_data_test() {
+        use data_transcoder::*;
 
+        let latitude = (34.0023 / 0.00001) as i32;
+        let longitude = (-74.3321 / 0.00001) as i32;
+        let latitude_data = encode_discrete(latitude);
+        let longitude_data = encode_discrete(longitude);
+        let mut full_data = [b'0'; 40];
+        for i in 0..8 {
+            full_data[i] = latitude_data[i];
+            full_data[i + 8] = longitude_data[i];
+        }
+        let adv_data = get_raw_advertising_data(&full_data);
+        let mimiced_string = mimic_received_data(adv_data);
+        let test_received_data = mimiced_string.as_bytes();
+        let mut encoded_latitude = [b'0'; 8];
+        let mut encoded_longitude = [b'0'; 8];
+        for i in 0..8 {
+            encoded_latitude[i] = test_received_data[i];
+            encoded_longitude[i] = test_received_data[i + 8];
+        }
+        let decoded_latitude = decode_discrete(&encoded_latitude);
+        let decoded_longitude = decode_discrete(&encoded_longitude);
+        assert_eq!(latitude, decoded_latitude);
+        assert_eq!(longitude, decoded_longitude);
+    }
+
+    fn mimic_received_data(generated: String) -> String {
+        (&generated.replace(" ", "")[34..]).to_string()
     }
 }
