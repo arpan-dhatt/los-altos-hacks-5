@@ -1,7 +1,7 @@
 use std::io::{BufRead, BufReader};
 use std::process::{Child, Command, Output, Stdio};
 
-fn get_raw_advertising_data(bytes: &[u8; 40]) -> String {
+pub fn get_raw_advertising_data(bytes: &[u8; 40]) -> String {
     // This data header is used to define this packet as an Eddystone advertisement. There are
     // still `20` bytes remaining that can be used.
 
