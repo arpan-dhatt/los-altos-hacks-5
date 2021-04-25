@@ -1,6 +1,6 @@
 use data_transcoder::*;
 use hci;
-use std::{io::Read, net::{TcpListener, TcpStream}, sync::mpsc::{channel, Sender}};
+use std::{io::Read, net::{TcpListener, TcpStream}, sync::mpsc::{Receiver, Sender, channel}};
 
 fn main() {
     let lescan_thread = std::thread::spawn(hci::activate_lescan);
@@ -13,10 +13,8 @@ fn main() {
     let graph_ingress_tx = packet_tx.clone();
     let graph_ingress_thread = std::thread::spawn(|| graph_ingress_fn(graph_ingress_tx));
 
-    for packet in packet_rx {
-        println!("{}", String::from_utf8_lossy(&packet));
-    }
-    println!("{:?} {:?} {:?}", lescan_thread.join(), packet_thread.join(), graph_ingress_thread.join());
+    let advertiser_thread = std::thread::spawn(|| advertisement_controller(packet_rx));
+    println!("{:?} {:?} {:?}, {:?}", lescan_thread.join(), packet_thread.join(), graph_ingress_thread.join(), advertiser_thread.join());
 }
 
 fn packet_thread_fn(tx: Sender<[u8; 40]>) {
@@ -49,6 +47,23 @@ fn extract_data(packet: &str) -> Option<[u8; 40]> {
         return Some(out);
     }
     None
+}
+
+fn advertisement_controller(rx: Receiver<[u8; 40]>) {
+    let mut current_adv_data = None;
+
+    for new_data in rx {
+        println!("{}", String::from_utf8_lossy(&new_data));
+        if let Some(old_data) = current_adv_data {
+            if &old_data != &new_data {
+                current_adv_data = Some(new_data);
+                hci::set_advertising_data(&current_adv_data.unwrap()).unwrap();
+            }
+        } else {
+            current_adv_data = Some(new_data);
+            hci::set_advertising_data(&current_adv_data.unwrap()).unwrap();
+        }
+    }
 }
 
 fn graph_ingress_fn(tx: Sender<[u8; 40]>) {
