@@ -77,6 +77,7 @@ fn periodic_advertisement_controller(rx: Receiver<[u8; 40]>) {
                 hci::set_advertising_data(&new_data).unwrap();
             }
         } else { // completely new message so it should be set immediately
+            first_seen.insert(new_data.clone(), time::Instant::now());
             hci::set_advertising_data(&new_data).unwrap();
         }
     }
