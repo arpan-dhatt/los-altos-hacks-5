@@ -70,6 +70,7 @@ fn periodic_advertisement_controller(rx: Receiver<[u8; 40]>) {
     let mut first_seen: HashMap<[u8; 40], time::Instant> = HashMap::new(); // WARNING: UNBOUNDED SIZE HASHMAP
 
     for new_data in rx {
+        println!("{}", String::from_utf8_lossy(&new_data));
         if first_seen.contains_key(&new_data) { // this is a repeat message
             if first_seen.get(&new_data).unwrap().elapsed().as_millis() > 60000 { // it's been long enough so let's resend this
                 first_seen.insert(new_data.clone(), time::Instant::now());
