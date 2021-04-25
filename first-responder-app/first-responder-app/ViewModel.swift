@@ -23,8 +23,8 @@ class ViewModel: ObservableObject {
     
     func removeSaved(e: emergency) -> Void {
         for i in 0..<activeEmergencies.count {
-            if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
-                activeMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+            if (activeEmergencies[i].name == e.name) {
+                //activeMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
                 activeEmergencies[i].activated = false
 
                 break
@@ -36,13 +36,13 @@ class ViewModel: ObservableObject {
         for i in 0..<activeEmergencies.count {
             if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
                 activeEmergencies[i].activated = true
-                savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+                //savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
                 
-                for i in 0..<activeEmergencies.count {
-                    if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
-                        activeMarkers.remove(at: i)
-                    }
-                }
+//                for i in 0..<activeEmergencies.count {
+//                    if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
+//                        activeMarkers.remove(at: i)
+//                    }
+//                }
                 break
             }
         }

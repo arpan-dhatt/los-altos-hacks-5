@@ -34,7 +34,7 @@ struct ResponderView: View {
                             
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
                                 if !emergency.activated{
-                                    emergencySavedCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
+                                    emergencyCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
                                 }
                             }
                             
@@ -51,8 +51,8 @@ struct ResponderView: View {
                             
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
                                 if emergency.activated{
-                                emergencyCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
-                                }{
+                                    emergencyCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
+                                }
                             }
                             
                             Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.activeMarkers){
@@ -97,7 +97,12 @@ struct emergencyCardView: View {
             }.padding(.top)
             Spacer()
             VStack(alignment: .leading){
-                Text("Active").font(.title2).fontWeight(.light)
+                if emergency.activated{
+                    Text("Active").font(.title2).fontWeight(.light)
+                }
+                else{
+                    Text("Not Active").font(.title2).fontWeight(.light)
+                }
             }.padding(.top)
         }
         }.padding().background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding(.vertical).padding(.horizontal, 5)
