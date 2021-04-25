@@ -57,7 +57,7 @@ struct ResponderView: View {
                         }.padding(.top)
                     }.padding()
                 }.navigationTitle("Current Emergencies").onAppear(perform: {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+6) {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+30) {
                         viewModel.activeEmergencies.append(emergency.init(name: "New Signal", latitude: 56.948889, longitude: 24.106389, activated: true))
                     }
                 })
