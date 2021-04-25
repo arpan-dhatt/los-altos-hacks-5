@@ -88,18 +88,18 @@ fn graph_ingress_fn(tx: Sender<[u8; 40]>) {
 
 fn handle_connection(mut stream: TcpStream) -> Option<(f32, f32)> {
     let mut buffer = [0u8; 1024];
-    if stream.read(&mut buffer).is_ok() {
+    stream.read(&mut buffer).unwrap();
         let stringified = String::from_utf8_lossy(&buffer);
         let mut numbers = stringified
-            .split(" ")
+            .split_whitespace()
+            .map(|e| e.trim())
             .map(|e| e.parse::<f32>())
             .filter_map(|e| match e {
                 Ok(n) => Some(n),
-                _ => None,
+                _ => None
             });
         if let (Some(latitude), Some(longitude)) = (numbers.next(), numbers.next()) {
             return Some((latitude, longitude))
         }
-    }
     None
 }
