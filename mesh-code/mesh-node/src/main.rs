@@ -106,7 +106,7 @@ fn handle_connection(mut stream: TcpStream) -> Option<(f32, f32)> {
     if stream.read(&mut buffer).is_ok() {
         let stringified = String::from_utf8_lossy(&buffer);
         let mut numbers = stringified
-            .split(" ")
+            .split_whitespace()
             .map(|e| e.parse::<f32>())
             .filter_map(|e| match e {
                 Ok(n) => Some(n),
