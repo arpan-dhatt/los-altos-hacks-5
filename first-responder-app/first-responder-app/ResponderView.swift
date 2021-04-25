@@ -20,7 +20,7 @@ struct ResponderView: View {
                     
                         VStack{
                             HStack{
-                                Text("My Saved Emergencies:").font(.title2).fontWeight(.light)
+                                Text("Pinned Emergencies:").font(.title2).fontWeight(.light)
                                 Spacer()
                             }
                             
