@@ -21,16 +21,16 @@ fn packet_thread_fn(tx: Sender<[u8; 40]>) {
 }
 
 fn is_eddystone_packet(packet: &str) -> bool {
-    packet.contains("1F0201060303AAFE1716AAFE")
+    packet.contains("1F0201060303AAFE1416AAFE")
 }
 
 fn extract_data(packet: &str) -> Option<[u8; 40]> {
-    let eddystone_header = "1F0201060303AAFE1716AAFE";
+    let eddystone_header = "1F0201060303AAFE1416AAFE";
     if let Some(header_start) = packet.find(eddystone_header) {
         let data_start = header_start + eddystone_header.len();
         let mut out = [b'0'; 40];
         for i in 0..40 {
-            if let Some(c) = packet.as_bytes().get(i) {
+            if let Some(c) = packet.as_bytes().get(data_start+i) {
                 out[i] = *c;
             }
             else {
