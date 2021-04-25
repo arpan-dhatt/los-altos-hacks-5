@@ -56,7 +56,11 @@ struct ResponderView: View {
                             
                         }.padding(.top)
                     }.padding()
-                }.navigationTitle("Current Emergencies")
+                }.navigationTitle("Current Emergencies").onAppear(perform: {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+6) {
+                        viewModel.activeEmergencies.append(emergency.init(name: "New Signal", latitude: 56.948889, longitude: 24.106389, activated: true))
+                    }
+                })
             }
         }
     }
@@ -79,7 +83,7 @@ struct emergencyCardView: View {
             HStack(alignment: .top){
             VStack(alignment: .leading){
                 Text(emergency.name).font(.title2).fontWeight(.bold).padding(.bottom)
-                Text(String(format: "Location: [ %.2f , %.2f ]", emergency.latitude, emergency.longitude)).font(.headline).fontWeight(.light)
+                Text(String(format: "Location: [ %.2f , %.2f ]", emergency.latitude, emergency.longitude)).font(.headline).fontWeight(.heavy).blur(radius: 4.0)
             }.padding(.top)
             Spacer()
             VStack(alignment: .leading){

@@ -13,11 +13,11 @@ class ViewModel: ObservableObject {
           center: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389),
           span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     
-    @Published var activeEmergencies: [emergency] = [emergency.init(name: "one", latitude: 56.948889, longitude: 24.106389, activated: true), emergency.init(name: "two", latitude: 56.948883, longitude: 24.106383, activated: false)]
+    @Published var activeEmergencies: [emergency] = [emergency.init(name: "Demo Signal One", latitude: 56.948889, longitude: 24.106389, activated: true), emergency.init(name: "Demo Signal Two", latitude: 56.948883, longitude: 24.106383, activated: false)]
     @Published var activeMarkers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red)),Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948883, longitude: 24.106383), tint: .red))]
     
     
-    @Published var savedEmergencies: [emergency] = [emergency.init(name: "one", latitude: 56.948889, longitude: 24.106389, activated: true)]
+    @Published var savedEmergencies: [emergency] = [emergency.init(name: "Demo Signal One", latitude: 56.948889, longitude: 24.106389, activated: true)]
     @Published var savedMarkers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red))]
     
     func removeSaved(e: emergency) -> Void {
