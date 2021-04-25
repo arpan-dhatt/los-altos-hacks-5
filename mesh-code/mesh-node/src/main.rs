@@ -1,6 +1,6 @@
 use data_transcoder::*;
 use hci;
-use std::{io::Read, net::{TcpListener, TcpStream}, sync::mpsc::{Receiver, Sender, channel}};
+use std::{collections::HashMap, io::Read, net::{TcpListener, TcpStream}, rt::panic_count::get, sync::mpsc::{Receiver, Sender, channel}, time};
 
 fn main() {
     let lescan_thread = std::thread::spawn(hci::activate_lescan);
@@ -13,7 +13,7 @@ fn main() {
     let graph_ingress_tx = packet_tx.clone();
     let graph_ingress_thread = std::thread::spawn(|| graph_ingress_fn(graph_ingress_tx));
 
-    let advertiser_thread = std::thread::spawn(|| advertisement_controller(packet_rx));
+    let advertiser_thread = std::thread::spawn(|| periodic_advertisement_controller(packet_rx));
     println!("{:?} {:?} {:?}, {:?}", lescan_thread.join(), packet_thread.join(), graph_ingress_thread.join(), advertiser_thread.join());
 }
 
@@ -49,7 +49,7 @@ fn extract_data(packet: &str) -> Option<[u8; 40]> {
     None
 }
 
-fn advertisement_controller(rx: Receiver<[u8; 40]>) {
+fn basic_advertisement_controller(rx: Receiver<[u8; 40]>) {
     let mut current_adv_data = None;
 
     for new_data in rx {
@@ -62,6 +62,21 @@ fn advertisement_controller(rx: Receiver<[u8; 40]>) {
         } else {
             current_adv_data = Some(new_data);
             hci::set_advertising_data(&current_adv_data.unwrap()).unwrap();
+        }
+    }
+}
+
+fn periodic_advertisement_controller(rx: Receiver<[u8; 40]>) {
+    let mut first_seen: HashMap<[u8; 40], time::Instant> = HashMap::new(); // WARNING: UNBOUNDED SIZE HASHMAP
+
+    for new_data in rx {
+        if first_seen.contains_key(&new_data) { // this is a repeat message
+            if first_seen.get(&new_data).unwrap().elapsed().as_millis() > 60000 { // it's been long enough so let's resend this
+                first_seen.insert(new_data.clone(), time::Instant::now());
+                hci::set_advertising_data(&new_data).unwrap();
+            }
+        } else { // completely new message so it should be set immediately
+            hci::set_advertising_data(&new_data).unwrap();
         }
     }
 }
