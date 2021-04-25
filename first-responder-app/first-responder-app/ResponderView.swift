@@ -16,6 +16,7 @@ struct ResponderView: View {
     @State private var coordinateRegion = MKCoordinateRegion(
           center: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389),
           span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    @Namespace var animation
     
     var body: some View {
         ZStack{
@@ -32,7 +33,7 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.savedEmergencies, id: \.id){ emergency in
-                                emergencySavedCardView(emergency: emergency)
+                                emergencySavedCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
                             }
                             
                             Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.savedMarkers){
@@ -47,7 +48,7 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
-                                emergencyCardView(emergency: emergency)
+                                emergencyCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
                             }
                             
                             Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.activeMarkers){

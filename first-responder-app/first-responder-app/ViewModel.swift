@@ -24,6 +24,9 @@ class ViewModel: ObservableObject {
     func removeSaved(e: emergency) -> Void {
         for i in 0..<savedEmergencies.count {
             if ((savedEmergencies[i].name == e.name) && (savedEmergencies[i].latitude == e.latitude)) {
+                activeMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+                activeEmergencies.append(e)
+                
                 savedEmergencies.remove(at: i)
                 savedMarkers.remove(at: i)
                 break
@@ -41,6 +44,13 @@ class ViewModel: ObservableObject {
         if notDuplicate{
             savedEmergencies.append(e)
             savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+            
+            for i in 0..<activeEmergencies.count {
+                if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
+                    activeEmergencies.remove(at: i)
+                    activeMarkers.remove(at: i)
+                }
+            }
         }
     }
 }
