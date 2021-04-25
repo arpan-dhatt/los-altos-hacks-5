@@ -95,6 +95,15 @@ pub fn set_advertising_data(bytes: &[u8; 40]) -> std::io::Result<Output> {
         .output()
 }
 
+pub fn stop_advertising() -> std::io::Result<Output> {
+    // Ends advertising on the device using the Host-Controller Insterface on the device.
+
+    Command::new("hciconfig")
+        .arg("hci0")
+        .arg("noleadv")
+        .output()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
