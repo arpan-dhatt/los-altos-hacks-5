@@ -1,6 +1,6 @@
 use data_transcoder::*;
 use hci;
-use std::{collections::HashMap, io::Read, net::{TcpListener, TcpStream}, rt::panic_count::get, sync::mpsc::{Receiver, Sender, channel}, time};
+use std::{collections::HashMap, io::Read, net::{TcpListener, TcpStream}, sync::mpsc::{Receiver, Sender, channel}, time};
 
 fn main() {
     let lescan_thread = std::thread::spawn(hci::activate_lescan);
