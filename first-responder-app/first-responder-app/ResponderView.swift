@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import  MapKit
 
 struct ResponderView: View {
+    
     @EnvironmentObject var viewModel: ViewModel
+    @State var markers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red))]
+    
+    @State private var coordinateRegion = MKCoordinateRegion(
+          center: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389),
+          span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     
     var body: some View {
         ZStack{
@@ -27,6 +34,10 @@ struct ResponderView: View {
                             ForEach(viewModel.savedEmergencies, id: \.id){ emergency in
                                 emergencySavedCardView(emergency: emergency)
                             }
+                            
+                            Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.savedMarkers){
+                                marker in marker.location
+                            }.frame(minHeight: 150, maxHeight: 150).cornerRadius(10).overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
 
                         }.padding(.top)
                         VStack{
@@ -38,6 +49,10 @@ struct ResponderView: View {
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
                                 emergencyCardView(emergency: emergency)
                             }
+                            
+                            Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.activeMarkers){
+                                marker in marker.location
+                            }.frame(minHeight: 150, maxHeight: 150).cornerRadius(10).overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black, lineWidth: 1))
                             
                         }.padding(.top)
                     }.padding()
@@ -64,7 +79,7 @@ struct emergencyCardView: View {
             HStack(alignment: .top){
             VStack(alignment: .leading){
                 Text(emergency.name).font(.title2).fontWeight(.bold).padding(.bottom)
-                Text(String(format: "Location: [ %.2f , \(emergency.longitude) ]", emergency.latitude)).font(.headline).fontWeight(.light)
+                Text(String(format: "Location: [ %.2f , %.2f ]", emergency.latitude, emergency.longitude)).font(.headline).fontWeight(.light)
             }.padding(.top)
             Spacer()
             VStack(alignment: .leading){
@@ -98,7 +113,7 @@ struct emergencySavedCardView: View {
             HStack(alignment: .top){
             VStack(alignment: .leading){
                 Text(emergency.name).font(.title2).fontWeight(.bold).padding(.bottom)
-                Text(String(format: "Location: [ %.2f , \(emergency.longitude) ]", emergency.latitude)).font(.headline).fontWeight(.light)
+                Text(String(format: "Location: [ %.2f , %.2f ]", emergency.latitude, emergency.longitude)).font(.headline).fontWeight(.light)
             }.padding(.top)
             Spacer()
             VStack(alignment: .leading){

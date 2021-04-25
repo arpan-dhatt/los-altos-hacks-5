@@ -6,16 +6,26 @@
 //
 
 import SwiftUI
+import MapKit
 
 class ViewModel: ObservableObject {
     @Published var page = "intro"
-    @Published var activeEmergencies: [emergency] = [emergency.init(name: "one", latitude: 1.0, longitude: 1.9, activated: true), emergency.init(name: "two", latitude: 1.3, longitude: 1.2, activated: true)]
-    @Published var savedEmergencies: [emergency] = [emergency.init(name: "one", latitude: 1.0, longitude: 1.9, activated: true)]
+    @State private var coordinateRegion = MKCoordinateRegion(
+          center: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389),
+          span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    
+    @Published var activeEmergencies: [emergency] = [emergency.init(name: "one", latitude: 56.948889, longitude: 24.106389, activated: true), emergency.init(name: "two", latitude: 56.948883, longitude: 24.106383, activated: false)]
+    @Published var activeMarkers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red)),Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948883, longitude: 24.106383), tint: .red))]
+    
+    
+    @Published var savedEmergencies: [emergency] = [emergency.init(name: "one", latitude: 56.948889, longitude: 24.106389, activated: true)]
+    @Published var savedMarkers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red))]
     
     func removeSaved(e: emergency) -> Void {
         for i in 0..<savedEmergencies.count {
             if ((savedEmergencies[i].name == e.name) && (savedEmergencies[i].latitude == e.latitude)) {
                 savedEmergencies.remove(at: i)
+                savedMarkers.remove(at: i)
                 break
             }
         }
@@ -30,6 +40,7 @@ class ViewModel: ObservableObject {
         }
         if notDuplicate{
             savedEmergencies.append(e)
+            savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
         }
     }
 }
@@ -40,4 +51,9 @@ struct emergency {
     var longitude: Double
     var activated: Bool
     var id = UUID()
+}
+
+struct Marker: Identifiable {
+    let id = UUID()
+    var location: MapMarker
 }
