@@ -22,36 +22,48 @@ class ViewModel: ObservableObject {
     @Published var savedMarkers: [Marker] = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 56.948889, longitude: 24.106389), tint: .red))]
     
     func removeSaved(e: emergency) -> Void {
-        for i in 0..<savedEmergencies.count {
-            if ((savedEmergencies[i].name == e.name) && (savedEmergencies[i].latitude == e.latitude)) {
+        for i in 0..<activeEmergencies.count {
+            if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
                 activeMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
-                activeEmergencies.append(e)
-                
-                savedEmergencies.remove(at: i)
-                savedMarkers.remove(at: i)
+                activeEmergencies[i].activated = false
+
                 break
             }
         }
     }
     
     func addSaved(e: emergency) -> Void{
-        var notDuplicate = true
-        for i in savedEmergencies {
-            if i.name == e.name {
-                notDuplicate = false
-            }
-        }
-        if notDuplicate{
-            savedEmergencies.append(e)
-            savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
-            
-            for i in 0..<activeEmergencies.count {
-                if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
-                    activeEmergencies.remove(at: i)
-                    activeMarkers.remove(at: i)
+        for i in 0..<activeEmergencies.count {
+            if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
+                activeEmergencies[i].activated = true
+                savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+                
+                for i in 0..<activeEmergencies.count {
+                    if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
+                        activeMarkers.remove(at: i)
+                    }
                 }
+                break
             }
         }
+        
+//        var notDuplicate = true
+//        for i in savedEmergencies {
+//            if i.name == e.name {
+//                notDuplicate = false
+//            }
+//        }
+//        if notDuplicate{
+//            savedEmergencies.append(e)
+//            savedMarkers.append(Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: e.latitude, longitude: e.latitude), tint: .red)))
+//
+//            for i in 0..<activeEmergencies.count {
+//                if ((activeEmergencies[i].name == e.name) && (activeEmergencies[i].latitude == e.latitude)) {
+//                    activeEmergencies.remove(at: i)
+//                    activeMarkers.remove(at: i)
+//                }
+//            }
+//        }
     }
 }
 

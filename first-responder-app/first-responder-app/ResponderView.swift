@@ -32,8 +32,10 @@ struct ResponderView: View {
                                 Spacer()
                             }
                             
-                            ForEach(viewModel.savedEmergencies, id: \.id){ emergency in
-                                emergencySavedCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
+                            ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
+                                if !emergency.activated{
+                                    emergencySavedCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
+                                }
                             }
                             
                             Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.savedMarkers){
@@ -48,7 +50,9 @@ struct ResponderView: View {
                             }
                             
                             ForEach(viewModel.activeEmergencies, id: \.id){ emergency in
+                                if emergency.activated{
                                 emergencyCardView(emergency: emergency).matchedGeometryEffect(id: emergency.name, in: animation)
+                                }{
                             }
                             
                             Map(coordinateRegion: $coordinateRegion, annotationItems: viewModel.activeMarkers){
@@ -71,9 +75,18 @@ struct emergencyCardView: View {
             HStack{
                 Image(systemName: "flame.fill").font(.title)
                 Spacer()
-                Image(systemName: "plus.square.fill.on.square.fill").font(.title).onTapGesture {
-                    withAnimation{
-                        viewModel.addSaved(e: emergency)
+                if(emergency.activated){
+                    Image(systemName: "plus.square.fill.on.square.fill").font(.title).onTapGesture {
+                        withAnimation{
+                            viewModel.addSaved(e: emergency)
+                        }
+                    }
+                }
+                else{
+                    Image(systemName: "x.circle.fill").font(.title).onTapGesture {
+                        withAnimation{
+                            viewModel.removeSaved(e: emergency)
+                        }
                     }
                 }
             }
@@ -84,13 +97,7 @@ struct emergencyCardView: View {
             }.padding(.top)
             Spacer()
             VStack(alignment: .leading){
-                if emergency.activated{
-                    Text("Active").font(.title2).fontWeight(.light)
-                }
-                else{
-                    Text("Not Active").font(.title2).fontWeight(.light)
-                }
-                
+                Text("Active").font(.title2).fontWeight(.light)
             }.padding(.top)
         }
         }.padding().background(Color.black).cornerRadius(10.0).foregroundColor(.white).padding(.vertical).padding(.horizontal, 5)
