@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F1A61712634EC1D00CBFADA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1A61702634EC1C00CBFADA /* LocationManager.swift */; };
 		4F2C38DA2634CE0A00970E8B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2C38D92634CE0A00970E8B /* ViewModel.swift */; };
 		4F2C38DD2634CE9900970E8B /* introView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2C38DC2634CE9900970E8B /* introView.swift */; };
 		4F2C38E02634CEEC00970E8B /* ResponderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2C38DF2634CEEC00970E8B /* ResponderView.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4F1A61702634EC1C00CBFADA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		4F2C38D92634CE0A00970E8B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewModel.swift; path = "first-responder-app/ViewModel.swift"; sourceTree = SOURCE_ROOT; };
 		4F2C38DC2634CE9900970E8B /* introView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = introView.swift; path = "first-responder-app/introView.swift"; sourceTree = SOURCE_ROOT; };
 		4F2C38DF2634CEEC00970E8B /* ResponderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ResponderView.swift; path = "first-responder-app/ResponderView.swift"; sourceTree = SOURCE_ROOT; };
@@ -69,6 +71,7 @@
 				4F2C38DC2634CE9900970E8B /* introView.swift */,
 				4F2C38DF2634CEEC00970E8B /* ResponderView.swift */,
 				4F2C38E22634CF0400970E8B /* CustomerView.swift */,
+				4F1A61702634EC1C00CBFADA /* LocationManager.swift */,
 			);
 			path = "first-responder-app";
 			sourceTree = "<group>";
@@ -153,6 +156,7 @@
 				7899EC4126346DF500B98A6E /* ContentView.swift in Sources */,
 				4F2C38E02634CEEC00970E8B /* ResponderView.swift in Sources */,
 				4F2C38E32634CF0400970E8B /* CustomerView.swift in Sources */,
+				4F1A61712634EC1D00CBFADA /* LocationManager.swift in Sources */,
 				4F2C38DD2634CE9900970E8B /* introView.swift in Sources */,
 				4F2C38DA2634CE0A00970E8B /* ViewModel.swift in Sources */,
 				7899EC3F26346DF500B98A6E /* first_responder_appApp.swift in Sources */,

@@ -6,17 +6,23 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct CustomerView: View {
+    @ObservedObject private var locationManager = LocationManager()
+    
     var body: some View {
+        let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate : CLLocationCoordinate2D()
+        
         VStack(alignment: .leading){
             Text("You Are Connected To The Disaster Duck Network").font(.title).bold().padding(.leading)
             RedButton()
-            VStack{
-                Text("Your Current Location:")
+            VStack(alignment: .leading){
+                Text("Your Current Location").padding(.vertical).font(.title3)
+                Text("Latitude: \(coordinate.latitude)")
+                Text("Longitude: \(coordinate.longitude)")
                 
-            }
-            
+            }.padding().font(.headline)
         }
     }
 }
@@ -32,7 +38,7 @@ struct RedButton: View{
             Text("S.O.S").font(.title).foregroundColor(.white).fontWeight(.light)
         }.onTapGesture {
             self.animate.toggle()
-        }.animation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false))
+        }.animation(Animation.linear(duration: 1.0).repeatForever(autoreverses: true))
     }
 }
 
